@@ -1,0 +1,52 @@
+TRUNCATE TABLE Offload_Fact_Post
+
+-- SET IDENTITY_INSERT ON dient zur Einschalten einer Einfügeoperation auf eine Identity-spalte 
+-- Identity-Spalten sind in der Regel autoincrementet Spalten 
+-- deswegen muss explizit die Anweisung SET IDENTITY_INSERT eingesetzt werden
+
+SET IDENTITY_INSERT Offload_Fact_Post ON
+
+DELETE FROM  Fact_Post
+
+	OUTPUT deleted.BusinessId,
+	       deleted.AcceptedAnswerId,
+		   deleted.AnswerCount,
+		   deleted.ClosedDate,
+		   deleted.CommentCount,
+		   deleted.CommunityOwnedDate,
+		   deleted.CreationDate,
+		   deleted.FavoriteCount,
+		   deleted.LastActivityDate,
+		   deleted.LastEditDate,
+		   deleted.OwnerUserId,
+		   deleted.Score,
+		   deleted.ViewCount,
+		   deleted.skFact_PostId,
+		   deleted.skPostTypeId,
+		   deleted.skTechnologieId
+		   
+    
+	INTO   Offload_Fact_Post
+		  ( BusinessId,
+	       AcceptedAnswerId,
+		   AnswerCount,
+		   ClosedDate,
+		   CommentCount,
+		   CommunityOwnedDate,
+		   CreationDate,
+		   FavoriteCount,
+		   LastActivityDate,
+		   LastEditDate,
+		   OwnerUserId,
+		   Score,
+		   ViewCount,
+		   skFact_PostId,
+		   skPostTypeId,
+		   skTechnologieId
+		   )	   	
+
+WHERE  (10227 - LastActivityDate ) >= 1095; 
+SET IDENTITY_INSERT Offload_Fact_Post OFF
+GO
+--in LastActivityDate ist ein INT gespeichert, der auf eine Datum im tabellen Dim_Date verweist 
+--1095= 365 * 3 = 3 jahre --10227 repräsentiert das Datum 01 januar 2018 im Dim_Date
